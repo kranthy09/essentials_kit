@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models.deletion import CASCADE
 from datetime import datetime, timedelta
 
+from django.db.models.query_utils import select_related_descend
+
 
 # Create your models here.
 
@@ -30,7 +32,7 @@ class Form(models.Model):
         default="instructions"
     )
     available_till = models.DateTimeField(
-        default=datetime.now() + timedelta(days=30)
+        default=str(datetime.now() + timedelta(days=30))
     )
 
 class UserForm(models.Model):
@@ -48,6 +50,9 @@ class UserForm(models.Model):
 
 class Brand(models.Model):
     brand_name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return 'brand: {}'.format(self.brand_name)
 
 class Item(models.Model):
     item_name = models.CharField(max_length=20)
