@@ -15,10 +15,12 @@ class Form(models.Model):
     LIVE = 'LIVE'
     CLOSED = 'CLOSED'
     DONE = 'DONE'
+    INACTIVE = 'INACTIVE'
     FORM_STATUS = (
         (LIVE, 'Live'),
         (CLOSED, 'Closed'),
-        (DONE, 'Done')
+        (DONE, 'Done'),
+        (INACTIVE, 'Inactive')
     )
 
     form_name = models.CharField(max_length=20)
@@ -82,7 +84,7 @@ class ItemBrand(models.Model):
         decimal_places=3,
     )
 
-class ProductList(models.Model):
+class Product(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE
@@ -100,4 +102,4 @@ class ProductList(models.Model):
         on_delete=models.CASCADE
     )
     quantity_ordered = models.IntegerField(default=0)
-    quantity_delivered = models.IntegerField(default=0)
+    quantity_delivered = models.IntegerField(blank=True, null=True, default=0)

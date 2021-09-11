@@ -1,5 +1,5 @@
 from django.db.models import fields
-from store.models import Brand, Form, Item, ItemBrand, User
+from store.models import Brand, Form, Item, ItemBrand, Product, User
 from rest_framework import serializers
 
 
@@ -69,3 +69,34 @@ class ItemBrandSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+class ProductSerializer(serializers.Serializer):
+
+    user = UserSerializer()
+    form = FormSerializer()
+    item = ItemSerializer()
+    brand = BrandSerializer()
+    quantity_ordered = serializers.IntegerField()
+    quantity_delivered = serializers.IntegerField()
+
+    def create(self, validated_data):
+        user_dict = validated_data.pop('user')
+        user = User.objects.get(**user_dict)
+        form_dict = validated_data.pop('form')
+        form = Form.objects.get(**form_dict)
+        item_dict = validated_data.pop('item')
+        item = Item.objects.get(**item_dict)
+        brand_dict = validated_data.pop('brand')
+        brand = Brand.objects.get(**brand_dict)
+        return Product.objects.create(
+            user=user,
+            form=form,
+            item=item,
+            brand=brand,
+            **validated_data
+        )
+    
+    def post(self, instance, validated_data):
+        instance.quantity_ordered = validated_data.get_data('quantity_ordered', instance.quantity_ordered)
+        instance.quantity_delivered = validated_data.get_data('quantity_delivered', instance.quantity_delivered)
+        instance.save()
+        return instance
