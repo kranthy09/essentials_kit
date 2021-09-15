@@ -78,7 +78,7 @@ class FormList(APIView):
 
 class FormDetail(APIView):
     """
-    Retrieve, update or delete a user instance.
+    Retrieve, update or delete a form instance.
     """
     def get_object(self, pk):
         try:
@@ -107,7 +107,7 @@ class FormDetail(APIView):
 
 class ItemList(APIView):
     """
-    List all forms, or create a new user.
+    List all Items, or create a new Item.
     """
     def get(self, request, format=None):
         items = Item.objects.all()
@@ -123,6 +123,10 @@ class ItemList(APIView):
 
 class ItemDetail(APIView):
     
+    """
+    Retrieve, update or delete a item instance.
+    """
+
     def get_object(self, pk):
         try:
             return Item.objects.get(pk=pk)
@@ -150,10 +154,13 @@ class ItemDetail(APIView):
 
 class BrandList(APIView):
     """
-    List all forms, or create a new user.
+    List all Brands, or create a new brand.
     """
     def get(self, request, format=None):
-        brands = Brand.objects.all()
+        try:
+            brands = Brand.objects.all()
+        except Brand.DoesNotExist:
+            raise Http404
         serializer = BrandSerializer(brands, many=True)
         return Response(serializer.data)
 
@@ -166,6 +173,10 @@ class BrandList(APIView):
 
 class BrandDetail(APIView):
     
+    """
+    Retrieve, update or delete a brand instance.
+    """
+
     def get_object(self, pk):
         try:
             return Brand.objects.get(pk=pk)
@@ -193,12 +204,13 @@ class BrandDetail(APIView):
 
 class ItemBrandList(APIView):
     """
-    List all forms, or create a new user.
+    List all ItemBrand, or create a new itembrand.
     """
     def get(self, request, format=None):
-        print("*"*50)
-        print(request)
-        itembrands = ItemBrand.objects.all()
+        try:
+            itembrands = ItemBrand.objects.all()
+        except ItemBrand.DoesNotExist:
+            raise Http404
         serializer = ItemBrandSerializer(itembrands, many=True)
         return Response(serializer.data)
 
@@ -222,11 +234,17 @@ class ItemBrandList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class ProductList(APIView):
 
+    """
+    List all products or create a new product instance
+    """
+
     def get(self, request, format=None):
-        products = Product.objects.all()
+        try:
+            products = Product.objects.all()
+        except Product.DoesNotExist:
+            raise Http404
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     

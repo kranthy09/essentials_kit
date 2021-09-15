@@ -9,6 +9,9 @@ from django.db.models.query_utils import select_related_descend
 
 class User(models.Model):
     user_name = models.CharField(max_length=100)
+    
+    def __str__(self) -> str:
+        return 'user_name: {}'.format(self.user_name)
 
 class Form(models.Model):
 
@@ -37,6 +40,11 @@ class Form(models.Model):
         default=str(datetime.now() + timedelta(days=30))
     )
 
+    def __str__(self) -> str:
+        return 'form_name: {} | form_status: {}'.format(
+            self.form_name, self.form_status
+        )
+
 class UserForm(models.Model):
     user = models.ForeignKey(
         User,
@@ -49,6 +57,9 @@ class UserForm(models.Model):
         on_delete=models.CASCADE
     )
     user_form_updates = models.CharField(max_length=50)
+
+    def __str__(self) -> str:
+        return 'user: {} | form: {}'.format(self.user, self.form)
 
 class Brand(models.Model):
     brand_name = models.CharField(max_length=20)
@@ -68,6 +79,10 @@ class Item(models.Model):
         through_fields=['item', 'brand']
     )
     item_category = models.CharField(max_length=9, default="CATEGORY")
+    
+    def __str__(self) -> str:
+        return 'item_name: {}'.format(self.item_name)
+
 
 class ItemBrand(models.Model):
     item = models.ForeignKey(
@@ -83,6 +98,11 @@ class ItemBrand(models.Model):
         max_digits=9,
         decimal_places=3,
     )
+
+    def __str__(self) -> str:
+        return 'item: {} | brand: {} | available: {}'.format(
+            self.item, self.brand, self.quantity_available
+        )
 
 class Product(models.Model):
     user = models.ForeignKey(

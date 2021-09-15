@@ -2,18 +2,7 @@ from django.db.models import fields
 from store.models import Brand, Form, Item, ItemBrand, Product, User
 from rest_framework import serializers
 
-
-# class UserSerializer(serializers.Serializer):
-#     id = serializers.IntegerField(read_only=True)
-#     user_name = serializers.CharField(max_length=100)
-
-#     def create(self, validated_data):
-#         return User.objects.create(**validated_data)
-    
-#     def update(self, instance, validated_data):
-#         instance.user_name = validated_data.get_data('user_name', instance.user_name)
-#         instance.save()
-#         return instance
+# Create Serializers
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
